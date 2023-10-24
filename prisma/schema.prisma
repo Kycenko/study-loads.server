@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Groups {
+  id           Int          @id @default(autoincrement())
+  speciality   Specialities @relation(fields: [specialityId], references: [id])
+  specialityId Int
+  name         String
+  course       Int          
+  StudyLoads   StudyLoads[]
+}
+
+model StudyLoads {
+  id                      Int      @id @default(autoincrement())
+  group                   Groups   @relation(fields: [groupId], references: [id])
+  groupId                 Int
+  subject                 Subjects @relation(fields: [subjectId], references: [id])
+  subjectId               Int
+  teacher                 Teachers @relation(fields: [teacherId], references: [id])
+  teacherId               Int
+  year                    Int
+  numberOfHours           Int
+  numberOfLectures        Int
+  numberOfLaboratoryWorks Int
+}
+
+model Subjects {
+  id    Int    @id @default(autoincrement())
+  name  String
+  hours Int
+
+  StudyLoads StudyLoads[]
+}
+
+model Teachers {
+  id               Int             @id @default(autoincrement())
+  academicDegree   AcademicDegrees @relation(fields: [academicDegreeId], references: [id])
+  academicDegreeId Int
+  workExperience   Int
+  jobTitle         String
+  fullName         String
+  StudyLoads       StudyLoads[]
+}
+
+model Specialities {
+  id      Int      @id @default(autoincrement())
+  name    String
+  faculty String
+  code    Int
+  Groups  Groups[]
+}
+
+model AcademicDegrees {
+  id                     Int        @id @default(autoincrement())
+  name                   String
+  year                   Int
+  educationalInstitution String
+  Teachers               Teachers[]
+}
