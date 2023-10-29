@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
 }
 
 datasource db {
@@ -7,45 +8,45 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 model Groups {
   id           Int          @id @default(autoincrement())
-  speciality   Specialities @relation(fields: [specialityId], references: [id])
   specialityId Int
   name         String
-  course       Int          
+  course       Int
+  speciality   Specialities @relation(fields: [specialityId], references: [id])
   StudyLoads   StudyLoads[]
 }
 
 model StudyLoads {
   id                      Int      @id @default(autoincrement())
-  group                   Groups   @relation(fields: [groupId], references: [id])
   groupId                 Int
-  subject                 Subjects @relation(fields: [subjectId], references: [id])
   subjectId               Int
-  teacher                 Teachers @relation(fields: [teacherId], references: [id])
   teacherId               Int
   year                    Int
   numberOfHours           Int
   numberOfLectures        Int
   numberOfLaboratoryWorks Int
+  group                   Groups   @relation(fields: [groupId], references: [id])
+  subject                 Subjects @relation(fields: [subjectId], references: [id])
+  teacher                 Teachers @relation(fields: [teacherId], references: [id])
 }
 
 model Subjects {
-  id    Int    @id @default(autoincrement())
-  name  String
-  hours Int
-
+  id         Int          @id @default(autoincrement()) 
+  name       String
+  hours      Int
   StudyLoads StudyLoads[]
 }
 
 model Teachers {
   id               Int             @id @default(autoincrement())
-  academicDegree   AcademicDegrees @relation(fields: [academicDegreeId], references: [id])
   academicDegreeId Int
   workExperience   Int
   jobTitle         String
   fullName         String
   StudyLoads       StudyLoads[]
+  academicDegree   AcademicDegrees @relation(fields: [academicDegreeId], references: [id])
 }
 
 model Specialities {
@@ -63,3 +64,50 @@ model AcademicDegrees {
   educationalInstitution String
   Teachers               Teachers[]
 }
+
+view GroupsView {
+  group_id Int @id
+  speciality String
+  name String
+  course Int
+}
+
+view SubjectsView {
+  subject_id Int @id
+  name String
+  hours Int
+}
+
+view TeachersView {
+  teacher_id Int @id
+  academicDegree String
+  workExperience Int
+  jobTitle String
+  fullName String
+}
+
+view SpecialitiesView {
+  speciality_id Int @id
+  name String
+  faculty String
+  code Int
+}
+
+view AcademicDegreesView {
+  academic_degree_id Int @id
+  name String
+  year Int
+  educationalInstitution String
+}
+
+view StudyLoadsView {
+  study_load_id Int @id
+  group String
+  subject String
+  teacher String
+  year Int
+  numberOfHours Int
+  numberOfLectures Int
+  numberOfLaboratoryWorks Int
+}
+

@@ -8,6 +8,7 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { TeachersService } from './teachers.service';
 import { CreateTeachersDto } from './dto/create-teachers.dto';
@@ -23,8 +24,13 @@ export class TeachersController {
   }
 
   @Get()
-  getAll() {
-    return this.teachersService.getAll();
+  getAll(
+    @Query('search') search: string,
+    @Query('orderByField') orderByField: string,
+    @Query('orderBy') orderBy: 'asc' | 'desc',
+  ) {
+    const orderByFieldToUse = orderByField || 'id';
+    return this.teachersService.getAll(search, orderByFieldToUse, orderBy);
   }
 
   @Get(':id')

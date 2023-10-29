@@ -8,6 +8,7 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { AcademicDegreesService } from './academic-degrees.service';
 import { CreateAcademicDegreesDto } from './dto/create-academic-degrees.dto';
@@ -25,10 +26,18 @@ export class AcademicDegreesController {
   }
 
   @Get()
-  getAll() {
-    return this.academicDegreesService.getAll();
+  getAll(
+    @Query('search') search: string,
+    @Query('orderByField') orderByField: string,
+    @Query('orderBy') orderBy: 'asc' | 'desc',
+  ) {
+    const orderByFieldToUse = orderByField || 'id';
+    return this.academicDegreesService.getAll(
+      search,
+      orderByFieldToUse,
+      orderBy,
+    );
   }
-
   @Get(':id')
   getById(@Param('id') id: number) {
     return this.academicDegreesService.getById(id);

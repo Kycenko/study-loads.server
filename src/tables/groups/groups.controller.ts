@@ -8,6 +8,7 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { CreateGroupsDto } from './dto/create-groups.dto';
@@ -24,8 +25,13 @@ export class GroupsController {
   }
 
   @Get()
-  getAll() {
-    return this.groupsService.getAll();
+  getAll(
+    @Query('search') search: string,
+    @Query('orderByField') orderByField: string,
+    @Query('orderBy') orderBy: 'asc' | 'desc',
+  ) {
+    const orderByFieldToUse = orderByField || 'id';
+    return this.groupsService.getAll(search, orderByFieldToUse, orderBy);
   }
 
   @Get(':id')

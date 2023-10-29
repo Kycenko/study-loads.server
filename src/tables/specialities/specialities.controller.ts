@@ -8,6 +8,7 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { SpecialitiesService } from './specialities.service';
 import { CreateSpecialitiesDto } from './dto/create-specialities.dto';
@@ -24,8 +25,13 @@ export class SpecialitiesController {
   }
 
   @Get()
-  getAll() {
-    return this.specialitiesService.getAll();
+  getAll(
+    @Query('search') search: string,
+    @Query('orderByField') orderByField: string,
+    @Query('orderBy') orderBy: 'asc' | 'desc',
+  ) {
+    const orderByFieldToUse = orderByField || 'id';
+    return this.specialitiesService.getAll(search, orderByFieldToUse, orderBy);
   }
 
   @Get(':id')

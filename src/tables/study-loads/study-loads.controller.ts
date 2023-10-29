@@ -8,6 +8,7 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { StudyLoadsService } from './study-loads.service';
 import { CreateStudyLoadsDto } from './dto/create-study-load.dto';
@@ -23,8 +24,13 @@ export class StudyLoadsController {
   }
 
   @Get()
-  getAll() {
-    return this.studyLoadsService.getAll();
+  getAll(
+    @Query('search') search: string,
+    @Query('orderByField') orderByField: string,
+    @Query('orderBy') orderBy: 'asc' | 'desc',
+  ) {
+    const orderByFieldToUse = orderByField || 'id';
+    return this.studyLoadsService.getAll(search, orderByFieldToUse, orderBy);
   }
 
   @Get(':id')
